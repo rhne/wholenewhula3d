@@ -11,6 +11,6 @@ public class SliderRingBehavior : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Vector3.back, Time.deltaTime * gameManager.GetSpeedMultiplier());
+		transform.Rotate(Vector3.back * gameManager.GetRotateDirection(), Time.deltaTime * gameManager.GetSpeedMultiplier());
 	}
 }

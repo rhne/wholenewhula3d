@@ -8,8 +8,11 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 	public int maxMissAllowed = 3;
 	public Text scoreText;
+	public Text FinalScore;
 	public GreenRingBehavior greenRing;
 	public Canvas gameOverCanvas;
+	public GameObject PrefabNice;
+	public GameObject PrefabWhoops;
 	public float speed = 50f;
 
 	private int calorie;
@@ -22,7 +25,8 @@ public class GameManager : MonoBehaviour {
 
 	float milestone;
 	float multiplier;
-
+	float maxSpeed;
+	int clockWise;
 
 	// Use this for initialization
 	void Start () {
@@ -36,10 +40,10 @@ public class GameManager : MonoBehaviour {
 
 		milestone = 4f;
 		multiplier = 3f;
-
+		maxSpeed = 1400f;
+		clockWise = 1;
 
 		gameOverCanvas.enabled = false;
-		//gameOverCanvas = GameObject.Find ("GameOverCanvas");
 		UpdateScoreText ();
 	}
 
@@ -50,6 +54,10 @@ public class GameManager : MonoBehaviour {
 		missCount = 0;
 		currentCombo += 1;
 		UpdateScoreText ();
+
+		// call animation here
+		Instantiate(PrefabNice);
+
 	}
 
 	//called by slider arrow when hit but missed
@@ -66,6 +74,8 @@ public class GameManager : MonoBehaviour {
 		//deprecate combo count
 		UpdateHighestCombo(currentCombo);
 		currentCombo = 0;
+
+		Instantiate(PrefabWhoops);
 	}
 
 	//called by slider arrow when completely missed
@@ -80,6 +90,8 @@ public class GameManager : MonoBehaviour {
 
 		UpdateHighestCombo(currentCombo);
 		currentCombo = 0;
+
+		Instantiate(PrefabWhoops);
 	}
 
 	//update the newest score to proper ScoreText 
@@ -98,16 +110,28 @@ public class GameManager : MonoBehaviour {
 	}
 
 	//returns Speed Multiplier value
+	//called by slider ring (parent of arrow)
 	public float GetSpeedMultiplier() {
 		if (totalHit / milestone > 1f) {
 			//if (totalHit % milestone == 0) {
-				speed += 10;
+			speed += 10;
+			//speed *= Random.
 			milestone += 4;
-				Debug.Log ("Change GEAR " + speed);
-				//Debug.Log (speed);
+			RandomReverse();
+			Debug.Log ("Change GEAR " + speed);
 			//}
 		}
 		return speed;
+	}
+
+	public int GetRotateDirection() {
+		return clockWise;
+	}
+
+	void RandomReverse() {
+		int[] value = {1, 1, -1};
+		int randomIndex = Random.Range (0, value.Length);
+		clockWise = value [randomIndex];
 	}
 
 	//returns current Calorie value
@@ -134,6 +158,7 @@ public class GameManager : MonoBehaviour {
 		//do effects and animation
 
 		//enable GameOverCanvas
+		FinalScore.text = GetCalorie().ToString();
 		gameOverCanvas.enabled = true;
 		//(gameOverCanvas.GetComponentInChildren ("FinalScore") as MonoBehaviour).text = "howdy";
 	}

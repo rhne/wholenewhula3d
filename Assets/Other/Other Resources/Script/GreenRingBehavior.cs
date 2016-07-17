@@ -20,7 +20,10 @@ public class GreenRingBehavior : MonoBehaviour {
 	}
 
 	public void UpdatePosition() {
+		//transform.Rotate(Vector3.back, 180f);
+		//Debug.Log("Z axis" + transform.eulerAngles.z);
 		transform.Rotate(Vector3.back, Random.Range(1f,15f) * 20);
+		//transform.eulerAngles.z
 	}
 
 }
